@@ -23,9 +23,7 @@
             --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
             
             /* GLOW STYLES */
-            /* Light Mode: Soft Light Blue */
             --glow-light: radial-gradient(circle, rgba(0, 113, 227, 0.2) 0%, rgba(0, 113, 227, 0) 65%);
-            /* Dark Mode: Ghostly White */
             --glow-dark: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
         }
 
@@ -34,36 +32,40 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
             margin: 0; padding: 0;
-            background: linear-gradient(135deg, #dbe4f0 0%, #c8d8eb 100%);
+            background: transparent;
             color: var(--text-light);
-            transition: background 0.5s ease, color 0.5s ease;
+            transition: color 0.5s ease;
             overflow-x: hidden;
             min-height: 100vh;
             cursor: default;
+            padding-bottom: 0px; /* Space for ticker */
         }
 
         body.dark-mode {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             color: var(--text-dark);
+        }
+
+        /* NEW BACKGROUND LAYER */
+        #bg-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -5;
+            background: linear-gradient(135deg, #dbe4f0 0%, #c8d8eb 100%);
+            transition: background 0.5s ease;
+        }
+
+        body.dark-mode #bg-layer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         }
 
         /* --- THE CURSOR GLOW --- */
         #cursor-glow {
-            position: fixed;
-            width: 700px; height: 700px;
-            background: var(--glow-light);
-            border-radius: 50%;
-            pointer-events: none; /* Allows clicks to pass through */
-            z-index: 0;
+            position: fixed; width: 700px; height: 700px;
+            background: var(--glow-light); border-radius: 50%;
+            pointer-events: none; z-index: 0;
             transform: translate(-50%, -50%);
-            transition: opacity 0.5s ease;
-            mix-blend-mode: multiply; /* Blends blue nicely in light mode */
+            transition: opacity 0.5s ease; mix-blend-mode: multiply;
         }
-        
-        body.dark-mode #cursor-glow {
-            background: var(--glow-dark);
-            mix-blend-mode: overlay; /* Blends white nicely in dark mode */
-        }
+        body.dark-mode #cursor-glow { background: var(--glow-dark); mix-blend-mode: overlay; }
 
         /* --- BACKGROUND BLOBS --- */
         .blob {
@@ -91,7 +93,7 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; z-index: 2; }
 
-        /* --- CAROUSEL (SMOOTH FLING) --- */
+        /* --- CAROUSEL --- */
         .carousel-wrapper {
             position: relative; border-radius: 24px; overflow: hidden;
             margin: 40px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
@@ -102,14 +104,10 @@
             -webkit-overflow-scrolling: touch; cursor: grab;
         }
         .carousel-track.active { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
-        .carousel-track::-webkit-scrollbar { display: none; } /* Hide scrollbar */
-        .carousel-item {
-            flex: 0 0 100%; height: 500px;
-            scroll-snap-align: center; position: relative;
-        }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        .carousel-item { flex: 0 0 100%; height: 500px; scroll-snap-align: center; position: relative; }
         .carousel-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        /* Boomer Buttons */
+        
         .nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
@@ -122,7 +120,103 @@
         .nav-btn:hover { background: rgba(255,255,255,0.4); transform: translateY(-50%) scale(1.1); }
         .nav-prev { left: 20px; } .nav-next { right: 20px; }
 
-        /* --- FULLSCREEN LIGHTBOX --- */
+        /* --- UPDATED HASHTAG STYLES --- */
+        .hashtag-sea {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin: 40px 0;
+            overflow: hidden;
+            border-radius: 24px;
+        }
+
+        /* The Wrapper handles the Mouse Repel & Position */
+        .tag-wrapper {
+            position: absolute;
+            transition: transform 0.1s ease-out; /* Fast, snappy reaction */
+            will-change: transform;
+            z-index: 10;
+        }
+        
+        /* The Inner Div handles the Floating Animation & Visuals */
+        .floater {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--accent);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            cursor: default;
+            user-select: none;
+            white-space: nowrap;
+        }
+        
+        body.dark-mode .floater {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #4facfe;
+        }
+
+        @keyframes gentle-float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- UPDATED ANIMATIONS --- */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        
+        /* Speed increased to 0.08s for high frequency vibration */
+        .rumble-active { animation: shake 0.08s infinite; }
+        
+        .rainbow-bg { animation: rainbow 2s linear infinite; }
+        @keyframes rainbow { 100% { filter: hue-rotate(360deg); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        /* --- TICKER --- */
+        .ticker-wrap {
+            position: relative; /* Changed from fixed */
+            width: 100%;
+            height: 40px;
+            background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(4px);
+            overflow: hidden;
+            pointer-events: none;
+            display: flex; 
+            align-items: center;
+            margin-top: 20px; /* Add space above it */
+        }
+        
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+        
+        .ticker-item {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding-right: 50px;
+            letter-spacing: 1px;
+        }
+
+        body.dark-mode .ticker-item { color: rgba(255,255,255,0.3); }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Move half way assuming duplicate content */
+        }
+
+        /* --- LIGHTBOX --- */
         #lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 9999;
@@ -137,7 +231,7 @@
             font-size: 2rem; cursor: pointer; z-index: 10001; background: none; border: none;
         }
 
-        /* --- MODAL SYSTEM --- */
+        /* --- MODAL --- */
         #modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
@@ -145,25 +239,18 @@
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
         #modal-overlay.active { opacity: 1; pointer-events: all; }
-        
         .modal-card {
             background: rgba(255, 255, 255, 0.9);
             width: 90%; max-width: 400px;
-            border-radius: 20px; padding: 30px;
-            text-align: center;
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 20px; padding: 30px; text-align: center;
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255,255,255,0.5);
-            color: #333;
+            border: 1px solid rgba(255,255,255,0.5); color: #333;
         }
         body.dark-mode .modal-card {
-            background: rgba(30, 30, 40, 0.95);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
+            background: rgba(30, 30, 40, 0.95); border: 1px solid rgba(255,255,255,0.1); color: white;
         }
         #modal-overlay.active .modal-card { transform: scale(1); }
-        
         .modal-btn {
             background: var(--accent); color: white; border: none;
             padding: 12px 30px; border-radius: 20px; font-size: 1rem;
@@ -171,7 +258,7 @@
         }
         .modal-btn:hover { transform: scale(1.05); }
 
-        /* --- TYPOGRAPHY & SECTIONS --- */
+        /* --- TYPOGRAPHY --- */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
         .brand {
             font-size: 2rem; font-weight: 900; letter-spacing: -1px;
@@ -185,9 +272,7 @@
             backdrop-filter: blur(5px); z-index: 10;
         }
 
-        /* Hero Text Container - IMPORTANT for Rumble Fix */
         .hero-text { text-align: center; margin: 40px 0; padding: 10px; }
-        
         h1 { font-size: 4.5rem; line-height: 0.95; margin-bottom: 10px; letter-spacing: -2px; display: inline-block; }
         .subtitle { font-size: 1.5rem; opacity: 0.8; font-weight: 300; }
 
@@ -211,33 +296,21 @@
         /* --- ANIMATIONS --- */
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
             50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
-        
-        /* The class applied to the H1, NOT the container */
         .rumble-active { animation: shake 0.5s infinite; }
-        
         .rainbow-bg { animation: rainbow 2s linear infinite; }
         @keyframes rainbow { 100% { filter: hue-rotate(360deg); } }
-
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+
         @media (max-width: 768px) { h1 { font-size: 3rem; } .bottom-grid, .specs-container { grid-template-columns: 1fr; } .carousel-item { height: 300px; } }
     </style>
 </head>
 <body>
+    <div id="bg-layer"></div>
 
     <div id="cursor-glow"></div>
-
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
 
@@ -248,7 +321,7 @@
         </header>
 
         <div class="hero-text" id="egg-hero-container">
-            <h1 id="egg-hero-text">The Tesla Cybertruck<br>of <span class="hyperbole">2002</span>.</h1>
+            <h1 id="egg-hero-text">The Tesla Cybertruck<br>of <span class="hyperbole">2005</span>.</h1>
             <p class="subtitle">Full Steel. 16 MPH. Zero range anxiety (because they don't start yet).</p>
         </div>
 
@@ -269,13 +342,13 @@
                 <div class="carousel-item" onclick="openLightbox(3)">
                     <img src="images/scooter-4.jpg" alt="Scooter 4">
                 </div>
-                <div class="carousel-item" onclick="openLightbox(3)">
+                <div class="carousel-item" onclick="openLightbox(4)">
                     <img src="images/scooter-5.jpg" alt="Scooter 5">
                 </div>
-                <div class="carousel-item" onclick="openLightbox(3)">
+                <div class="carousel-item" onclick="openLightbox(5)">
                     <img src="images/scooter-6.jpg" alt="Scooter 6">
                 </div>
-                <div class="carousel-item" onclick="openLightbox(3)">
+                <div class="carousel-item" onclick="openLightbox(6)">
                     <img src="images/scooter-7.jpg" alt="Scooter 7">
                 </div>
             </div>
@@ -284,9 +357,21 @@
         <div class="glass">
             <h2 style="margin-top: 0; font-size: 2rem;">Why you want this.</h2>
             <div class="grok-voice">
-                "Look, modern scooters are made of plastic and hope. These things are built like they were expecting a zombie apocalypse in the early 2000s. You could probably drive this through a drywall and the wall would apologize."
+                "Look, modern scooters are made of plastic and hope. These things are built like they were expecting a zombie apocalypse in the early 2000s. You could probably drive this through a wall and the wall would apologize."
             </div>
             
+            <div style="margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 15px;">
+                <h4 style="margin-top: 0; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Technical Schematics</h4>
+                <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style: none; padding: 0; margin: 0;">
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Motor:</strong>&nbsp; 24V High-Torque Brushed</li>
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Drive:</strong>&nbsp; Heavy Duty Chain Drive</li>
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Tires:</strong>&nbsp; 12.5" Pneumatic (Air Filled)</li>
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Brakes:</strong>&nbsp; Rear Drum/Band Brake</li>
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Throttle:</strong>&nbsp; Variable Speed Thumb Control</li>
+                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Construction:</strong>&nbsp; Square Tube Steel</li>
+                </ul>
+            </div>
+
             <div class="specs-container" style="margin-top: 30px;">
                 <div class="spec-card glass">
                     <h3>16 MPH*</h3>
@@ -307,8 +392,10 @@
             </div>
         </div>
 
+        <div class="hashtag-sea" id="hashtag-container">
+            </div>
+
         <div class="bottom-grid">
-            
             <div class="glass battery-warning">
                 <h3 style="color: var(--danger); margin-top: 0;">⚠️ Some Assembly Required</h3>
                 <p><strong>The bad news:</strong> Batteries are dead. As in, doornail dead.</p>
@@ -316,29 +403,26 @@
                 <p><strong>The IQ 200 Move:</strong> You buy cheap. You swap battery. You win.</p>
                 <div style="font-size: 3rem; text-align: center; margin-top: 20px; cursor: pointer; user-select:none;" id="battery-egg" title="Click to charge">🪫</div>
             </div>
-
             <div class="glass">
                 <div class="tabs">
                     <button class="tab-btn active" onclick="openTab('laws')">👮 Legal</button>
                     <button class="tab-btn" onclick="openTab('hacks')">🚀 Hacks</button>
                 </div>
-
                 <div id="laws" class="tab-content active">
                     <h3 id="egg-zombie-trigger" style="cursor:help; user-select:none;">The "Is it Legal?" Disclaimer</h3>
                     <div id="legal-text">
                         <div class="grok-voice">"It's not quite a bike. It's not quite a motorcycle. It's a loophole with wheels."</div>
                         <ul style="line-height: 1.8; opacity: 0.9;">
-                            <li><strong>Classification Confusion:</strong> It has a seat, so cops get confused. It's the platypus of transport.</li>
-                            <li><strong>Sidewalks = Lava:</strong> Don't ride on sidewalks. You are too powerful.</li>
-                            <li><strong>License:</strong> Need a driver's license in CA. No insurance needed though.</li>
+                            <li><strong>Classification Confusion:</strong><br> It has a seat, so cops get confused. It's the platypus of transport.</li>
+                            <li><strong>Sidewalks = Lava:</strong><br> Don't ride on sidewalks. You are too powerful.</li>
+                            <li><strong>License:</strong><br> Need a driver's license in CA. No insurance needed though.</li>
                         </ul>
                     </div>
                 </div>
-
                 <div id="hacks" class="tab-content">
-                    <h3 style="color: var(--accent);">🔓 Maximum Velocity</h3>
-                    <p><strong>Method 1: Gravity Assist.</strong> Find a steep hill. Let Newton take the wheel.</p>
-                    <p><strong>Method 2: Aero Tuck.</strong> Fold into an origami crane to reduce drag by 0.04%.</p>
+                    <h2 style="color: var(--accent);">🔓 Maximum Velocity</h2>
+                    <p><strong>Method 1: Gravity Assist.</strong><br> Find a steep hill. Let Newton take the wheel.</p>
+                    <p><strong>Method 2: Aero Tuck.</strong><br> Fold into an origami crane to reduce drag by 0.04%.</p>
                 </div>
             </div>
         </div>
@@ -346,6 +430,13 @@
         <footer style="text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem;">
             &copy; 2026 Lashout Resale. No refunds if you fall off.
         </footer>
+    </div>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">Easter Eggs: 1. Overcharge Battery (Click 6x) • 2. Glitch Logo (Double Click) • 3. Engine Rumble (Hover Title) • 4. Zombie Mode (Dbl Click Legal Tab) • 5. Party Mode (Click Rare Card) • 6. Matrix Mode (Konami Code) • </div>
+            <div class="ticker-item">Easter Eggs: 1. Overcharge Battery (Click 6x) • 2. Glitch Logo (Double Click) • 3. Engine Rumble (Hover Title) • 4. Zombie Mode (Dbl Click Legal Tab) • 5. Party Mode (Click Rare Card) • 6. Matrix Mode (Konami Code) • </div>
+        </div>
     </div>
 
     <div id="lightbox">
@@ -366,184 +457,176 @@
     </div>
 
     <script>
-        /* --- 1. MOUSE GLOW --- */
+        /* --- MOUSE GLOW --- */
         const glow = document.getElementById('cursor-glow');
-        const moveGlow = (x, y) => {
-            glow.style.left = x + 'px';
-            glow.style.top = y + 'px';
-            glow.style.opacity = '1';
-        };
+        const moveGlow = (x, y) => { glow.style.left = x + 'px'; glow.style.top = y + 'px'; glow.style.opacity = '1'; };
         document.addEventListener('mousemove', (e) => moveGlow(e.clientX, e.clientY));
         document.addEventListener('touchstart', (e) => moveGlow(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
         document.addEventListener('touchend', () => glow.style.opacity = '0');
 
-        /* --- 2. CAROUSEL & LIGHTBOX (SMOOTH LOOP) --- */
+        /* --- CAROUSEL LOGIC --- */
         const setupDrag = (trackId) => {
             const slider = document.getElementById(trackId);
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+            let isDown = false, startX, scrollLeft;
             slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('active'); startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
             slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('active'); });
             slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active'); });
             slider.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
         };
         setupDrag('main-carousel');
-
         function handleLoop(slider, direction, itemWidth) {
             const maxScroll = slider.scrollWidth - slider.clientWidth;
             if (direction === 1 && slider.scrollLeft >= maxScroll - 10) slider.scrollTo({ left: 0, behavior: 'smooth' });
             else if (direction === -1 && slider.scrollLeft <= 10) slider.scrollTo({ left: maxScroll, behavior: 'smooth' });
             else slider.scrollBy({ left: itemWidth * direction, behavior: 'smooth' });
         }
-
-        function moveCarousel(dir) {
-            const s = document.getElementById('main-carousel');
-            handleLoop(s, dir, s.querySelector('.carousel-item').offsetWidth);
-        }
-
-        const lightbox = document.getElementById('lightbox');
-        const lbTrack = document.getElementById('lightbox-track');
+        function moveCarousel(dir) { const s = document.getElementById('main-carousel'); handleLoop(s, dir, s.querySelector('.carousel-item').offsetWidth); }
+        
+        const lightbox = document.getElementById('lightbox'), lbTrack = document.getElementById('lightbox-track');
         function openLightbox(index) {
             lbTrack.innerHTML = document.getElementById('main-carousel').innerHTML;
             Array.from(lbTrack.children).forEach(child => child.onclick = null);
             setupDrag('lightbox-track');
-            lightbox.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => {
-                lightbox.classList.add('visible');
-                lbTrack.scrollLeft = window.innerWidth * index;
-            }, 10);
+            lightbox.style.display = 'flex'; document.body.style.overflow = 'hidden';
+            setTimeout(() => { lightbox.classList.add('visible'); lbTrack.scrollLeft = window.innerWidth * index; }, 10);
         }
-        function closeLightbox() {
-            lightbox.classList.remove('visible');
-            setTimeout(() => { lightbox.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
-        }
+        function closeLightbox() { lightbox.classList.remove('visible'); setTimeout(() => { lightbox.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); }
         function moveLightbox(dir) { handleLoop(lbTrack, dir, window.innerWidth); }
 
-        /* --- 3. MODAL LOGIC --- */
+        /* --- MODAL LOGIC --- */
         const modalOverlay = document.getElementById('modal-overlay');
         function showModal(title, msg) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-message').innerText = msg;
-            modalOverlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            document.getElementById('modal-title').innerText = title; document.getElementById('modal-message').innerText = msg;
+            modalOverlay.style.display = 'flex'; document.body.style.overflow = 'hidden';
             setTimeout(() => modalOverlay.classList.add('active'), 10);
         }
-        function closeModal() {
-            modalOverlay.classList.remove('active');
-            setTimeout(() => { modalOverlay.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
-        }
+        function closeModal() { modalOverlay.classList.remove('active'); setTimeout(() => { modalOverlay.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300); }
 
-        /* --- 4. EASTER EGGS --- */
+        /* --- HASHTAG SEA LOGIC (FIXED) --- */
+        const tags = ["#24v", "#10Ah", "#lead-acid", "#battery", "#Lashout", "#ElectricScooter", "#VintageTech", "#SteelFrame", "#16MPH", "#CurrieTechnologies", "#Foldable", "#ChainDrive", "#HighTorque", "#DiscBrakes", "#ZeroEmissions", "#RetroRide", "#GarageFind", "#EasyFix", "#DIY", "#Sustainable", "#CaliforniaCruiser", "#OffRoadIsh", "#TankBuild", "#NoPlastic", "#90sVibes"];
+        const seaContainer = document.getElementById('hashtag-container');
         
-        // EGG 1: BATTERY
+        // 1. Generate Tags with Wrapper Structure
+        tags.forEach(text => {
+            // Create Wrapper (For Position & Repel)
+            const wrap = document.createElement('div');
+            wrap.classList.add('tag-wrapper');
+            // Random Position
+            wrap.style.top = Math.random() * 85 + "%";
+            wrap.style.left = Math.random() * 85 + "%";
+            
+            // Create Inner (For Visuals & Float Animation)
+            const inner = document.createElement('div');
+            inner.classList.add('floater');
+            inner.innerText = text;
+            inner.style.fontSize = Math.floor(Math.random() * 10 + 12) + "px";
+            
+            // Randomize Float Animation
+            inner.style.animation = `gentle-float ${Math.random() * 3 + 3}s ease-in-out infinite`;
+            inner.style.animationDelay = `${Math.random() * 5}s`;
+            
+            wrap.appendChild(inner);
+            seaContainer.appendChild(wrap);
+        });
+
+        // 2. Repel Effect (Targets the Wrapper now, not the floater)
+        // We use a timeout to ensure elements exist
+        setTimeout(() => {
+            const wrappers = document.querySelectorAll('.tag-wrapper');
+            
+            seaContainer.addEventListener('mousemove', (e) => {
+                wrappers.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    const deltaX = e.clientX - centerX;
+                    const deltaY = e.clientY - centerY;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    
+                    // Repel distance threshold
+                    const threshold = 120;
+                    
+                    if (distance < threshold) {
+                        // Calculate repel force
+                        const force = (threshold - distance) / threshold;
+                        const moveX = -(deltaX / distance) * force * 50; 
+                        const moveY = -(deltaY / distance) * force * 50;
+                        
+                        el.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    } else {
+                        el.style.transform = `translate(0, 0)`;
+                    }
+                });
+            });
+            
+            // Reset when mouse leaves
+            seaContainer.addEventListener('mouseleave', () => {
+                wrappers.forEach(el => el.style.transform = `translate(0, 0)`);
+            });
+        }, 100);
+
+
+        /* --- EASTER EGGS --- */
         let charge = 0;
         document.getElementById('battery-egg').addEventListener('click', (e) => {
-            charge++;
-            e.target.style.transform = `scale(${1 + charge*0.1})`;
-            if(charge === 3) showModal("Charging...", "You are manually charging the battery with your mouse. Keep going.");
-            if(charge === 6) {
-                showModal("System Overload", "Okay, that's enough. You broke the simulation.");
-                e.target.innerText = "⚡️";
-                charge = 0;
-            }
+            charge++; e.target.style.transform = `scale(${1 + charge*0.1})`;
+            if(charge === 3) showModal("Charging...", "Keep going.");
+            if(charge === 6) { showModal("Overload", "You broke the simulation."); e.target.innerText = "⚡️"; charge=0; }
         });
 
-        // EGG 2: GLITCH LOGO
-        const logo = document.getElementById('egg-logo');
-        logo.addEventListener('dblclick', () => {
-            logo.style.transform = "scale(1.5) rotate(-5deg)";
-            logo.textContent = "LASHING OUT!";
-            logo.style.color = "red";
-            setTimeout(() => {
-                logo.style.transform = "scale(1) rotate(0deg)";
-                logo.textContent = "LASHOUT";
-                logo.style.color = "inherit";
-            }, 1000);
+        document.getElementById('egg-logo').addEventListener('dblclick', (e) => {
+            e.target.style.transform = "scale(1.5) rotate(-5deg)"; e.target.textContent = "LASHING OUT!"; e.target.style.color = "red";
+            setTimeout(() => { e.target.style.transform = "scale(1) rotate(0deg)"; e.target.textContent = "LASHOUT"; e.target.style.color = "inherit"; }, 1000);
         });
 
-        // EGG 3: ZOMBIE PROTOCOL
-        const zombieTrigger = document.getElementById('egg-zombie-trigger');
-        const legalText = document.getElementById('legal-text');
         let zombieMode = false;
-        zombieTrigger.addEventListener('dblclick', () => {
+        document.getElementById('egg-zombie-trigger').addEventListener('dblclick', (e) => {
             if(!zombieMode) {
-                zombieTrigger.innerText = "🧟 Zombie Survival Stats";
-                zombieTrigger.style.color = "green";
-                legalText.innerHTML = `<ul style="line-height: 1.8; color: #2ecc71;"><li><strong>Silent Running:</strong> Electric motor won't attract the horde.</li><li><strong>Range:</strong> 8 miles is enough to reach the safe zone.</li><li><strong>Durability:</strong> Steel frame can be used as a blunt weapon.</li></ul>`;
+                e.target.innerText = "🧟 Zombie Survival Stats"; e.target.style.color = "green";
+                document.getElementById('legal-text').innerHTML = `<ul style="line-height: 1.8; color: #2ecc71;"><li><strong>Silent:</strong> Stealth +100.</li><li><strong>Range:</strong> 8 miles to safety.</li><li><strong>Durability:</strong> Blunt weapon class.</li></ul>`;
                 zombieMode = true;
             }
         });
 
-        // EGG 4: ENGINE RUMBLE (FIXED)
-        // Detects hover on container, shakes the text inside
-        const heroContainer = document.getElementById('egg-hero-container');
-        const heroText = document.getElementById('egg-hero-text');
-        
-        heroContainer.addEventListener('mouseenter', () => {
-            heroText.classList.add('rumble-active');
-        });
-        heroContainer.addEventListener('mouseleave', () => {
-            heroText.classList.remove('rumble-active');
+        const heroC = document.getElementById('egg-hero-container'), heroT = document.getElementById('egg-hero-text');
+        heroC.addEventListener('mouseenter', () => heroT.classList.add('rumble-active'));
+        heroC.addEventListener('mouseleave', () => heroT.classList.remove('rumble-active'));
+
+        // EGG 5: PARTY MODE (FIXED)
+        document.getElementById('egg-rare').addEventListener('click', () => {
+            const targets = [
+                document.getElementById('bg-layer'), 
+                document.querySelector('.container'), 
+                document.querySelector('.blob-1'), 
+                document.querySelector('.blob-2')
+            ];
+            targets.forEach(el => el.classList.toggle('rainbow-bg'));
         });
 
-        // EGG 5: KONAMI CODE (MATRIX MODE - FIXED MODAL)
-        let keySeq = [];
-        const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','b','a'];
+        let keySeq = []; const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','b','a'];
         document.addEventListener('keydown', (e) => {
-            keySeq.push(e.key);
-            keySeq = keySeq.slice(-6);
+            keySeq.push(e.key); keySeq = keySeq.slice(-6);
             if (JSON.stringify(keySeq) === JSON.stringify(code)) {
-                // Apply Matrix Styles
-                document.body.style.fontFamily = "'Courier New', monospace";
-                document.body.style.background = "#000";
-                document.body.style.color = "#0f0";
-                
-                // Style Glass Panels
-                document.querySelectorAll('.glass').forEach(p => {
-                    p.style.background = "rgba(0, 255, 0, 0.05)";
-                    p.style.borderColor = "#0f0";
-                    p.style.color = "#0f0";
-                    p.style.boxShadow = "0 0 10px #0f0";
-                });
-                
-                // Style Modal for Matrix Mode (The Fix)
-                const modalCard = document.getElementById('main-modal-card');
-                modalCard.style.backgroundColor = "#000";
-                modalCard.style.border = "1px solid #0f0";
-                modalCard.style.color = "#0f0";
-                modalCard.style.boxShadow = "0 0 20px #0f0";
-                
-                const modalBtn = document.getElementById('modal-close-btn');
-                modalBtn.style.backgroundColor = "#0f0";
-                modalBtn.style.color = "#000";
-                
-                document.getElementById('modal-title').style.color = "#0f0";
-
-                showModal("Mainframe Hacked", "Welcome to the real world, Neo.");
+                document.body.style.fontFamily = "'Courier New', monospace"; document.body.style.background = "#000"; document.body.style.color = "#0f0";
+                document.querySelectorAll('.glass').forEach(p => { p.style.background = "rgba(0, 255, 0, 0.05)"; p.style.borderColor = "#0f0"; p.style.color = "#0f0"; p.style.boxShadow = "0 0 10px #0f0"; });
+                const mc = document.getElementById('main-modal-card'); mc.style.backgroundColor = "#000"; mc.style.border = "1px solid #0f0"; mc.style.color = "#0f0"; mc.style.boxShadow = "0 0 20px #0f0";
+                document.getElementById('modal-close-btn').style.backgroundColor = "#0f0"; document.getElementById('modal-close-btn').style.color = "#000"; document.getElementById('modal-title').style.color = "#0f0";
+                showModal("Hacked", "Welcome to the real world.");
             }
         });
 
-        // EGG 6: PARTY MODE
-        const rareCard = document.getElementById('egg-rare');
-        rareCard.addEventListener('click', () => {
-            document.body.classList.toggle('rainbow-bg');
-        });
-
-        /* --- 5. THEME TOGGLE --- */
+        /* --- THEME --- */
         const themeBtn = document.getElementById('theme-btn');
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark-mode');
         themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeBtn.innerText = document.body.classList.contains('dark-mode') ? "Dark Mode" : "Light Mode";
+            document.body.classList.toggle('dark-mode'); themeBtn.innerText = document.body.classList.contains('dark-mode') ? "Dark Mode" : "Light Mode";
         });
 
         function openTab(id) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+            document.getElementById(id).classList.add('active'); event.target.classList.add('active');
         }
     </script>
 </body>
