@@ -17,6 +17,10 @@
             --accent: #0071e3;
             --danger: #ff3b30;
             --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            
+            /* GLOW COLORS */
+            --glow-light: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0, 113, 227, 0) 70%);
+            --glow-dark: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
         }
 
         * { box-sizing: border-box; }
@@ -43,16 +47,18 @@
             position: fixed;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            background: var(--glow-light); /* Blue in Light Mode */
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
             transform: translate(-50%, -50%);
             transition: opacity 0.5s ease;
-            mix-blend-mode: overlay;
+            mix-blend-mode: multiply; /* Better blending for blue */
         }
+        
         body.dark-mode #cursor-glow {
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+            background: var(--glow-dark); /* White in Dark Mode */
+            mix-blend-mode: overlay;
         }
 
         /* --- BACKGROUND BLOBS --- */
@@ -87,6 +93,7 @@
             margin-bottom: 30px;
             position: relative;
             z-index: 1;
+            transition: transform 0.2s;
         }
 
         body.dark-mode .glass {
@@ -116,17 +123,16 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Momentum scroll on iOS */
+            -webkit-overflow-scrolling: touch; 
             cursor: grab;
         }
         
         .carousel-track.active {
             cursor: grabbing;
-            scroll-snap-type: none; /* Disable snap while dragging */
+            scroll-snap-type: none;
             scroll-behavior: auto;
         }
 
-        /* Hide Scrollbar */
         .carousel-track::-webkit-scrollbar { display: none; }
         .carousel-track { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -141,7 +147,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            pointer-events: none; /* Prevents image drag behavior */
+            pointer-events: none;
         }
 
         /* Boomer Buttons */
@@ -181,23 +187,16 @@
             transition: opacity 0.3s ease;
         }
         #lightbox.visible { opacity: 1; }
-        
         #lightbox .carousel-item { height: 80vh; }
         #lightbox .carousel-item img { object-fit: contain; }
-
         .close-lightbox {
             position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            z-index: 10001;
-            background: none;
-            border: none;
+            top: 20px; right: 30px; color: white;
+            font-size: 2rem; cursor: pointer; z-index: 10001;
+            background: none; border: none;
         }
 
-        /* --- MODAL (POPUP) STYLES --- */
+        /* --- MODAL STYLES --- */
         #modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -211,54 +210,37 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        
-        #modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+        #modal-overlay.active { opacity: 1; pointer-events: all; }
         .modal-card {
             background: rgba(255, 255, 255, 0.85);
-            width: 90%;
-            max-width: 400px;
-            border-radius: 20px;
-            padding: 30px;
+            width: 90%; max-width: 400px;
+            border-radius: 20px; padding: 30px;
             text-align: center;
             transform: scale(0.8);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255,255,255,0.5);
         }
-
         body.dark-mode .modal-card {
             background: rgba(30, 30, 40, 0.9);
             border: 1px solid rgba(255,255,255,0.1);
             color: white;
         }
-
         #modal-overlay.active .modal-card { transform: scale(1); }
-
         .modal-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 20px;
-            font-size: 1rem;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: var(--accent); color: white; border: none;
+            padding: 12px 30px; border-radius: 20px; font-size: 1rem;
+            margin-top: 20px; cursor: pointer; transition: 0.2s;
         }
-        .modal-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,113,227,0.4); }
+        .modal-btn:hover { transform: scale(1.05); }
 
         /* --- TYPOGRAPHY & LAYOUT --- */
-        header {
-            display: flex; justify-content: space-between; align-items: center; padding: 20px 0;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
         .brand {
             font-size: 2rem; font-weight: 900; letter-spacing: -1px;
             background: linear-gradient(90deg, #00c6ff, #0072ff);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            cursor: help;
         }
         .toggle-btn {
             background: rgba(0,0,0,0.05); border: none; padding: 10px 20px;
@@ -266,12 +248,12 @@
             backdrop-filter: blur(5px); z-index: 10;
         }
 
-        .hero-text { text-align: center; margin: 40px 0; }
+        .hero-text { text-align: center; margin: 40px 0; position: relative; }
         h1 { font-size: 4.5rem; line-height: 0.95; margin-bottom: 10px; letter-spacing: -2px; }
         .subtitle { font-size: 1.5rem; opacity: 0.8; font-weight: 300; }
 
         .specs-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .spec-card { padding: 20px; text-align: center; }
+        .spec-card { padding: 20px; text-align: center; cursor: pointer; }
         .spec-card h3 { color: var(--accent); margin-bottom: 5px; font-size: 2rem; }
 
         .bottom-grid { display: grid; grid-template-columns: 1.2fr 2fr; gap: 20px; margin-top: 40px; }
@@ -286,6 +268,18 @@
         .grok-voice { font-style: italic; opacity: 0.8; border-left: 3px solid var(--accent); padding-left: 15px; margin: 15px 0; }
         .hyperbole { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
 
+        /* EASTER EGG ANIMATIONS */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .rumble { animation: shake 0.5s infinite; }
+        
+        .rainbow-bg { animation: rainbow 2s linear infinite; }
+        @keyframes rainbow { 100% { filter: hue-rotate(360deg); } }
+
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 768px) { h1 { font-size: 3rem; } .bottom-grid, .specs-container { grid-template-columns: 1fr; } .carousel-item { height: 300px; } }
     </style>
@@ -299,11 +293,11 @@
 
     <div class="container">
         <header>
-            <div class="brand" id="logo-trigger">LASHOUT</div>
+            <div class="brand" id="egg-logo" title="Double Click to Lash Out">LASHOUT</div>
             <button class="toggle-btn" id="theme-btn">Auto Mode</button>
         </header>
 
-        <div class="hero-text">
+        <div class="hero-text" id="egg-hero">
             <h1>The Tesla Cybertruck<br>of <span class="hyperbole">2002</span>.</h1>
             <p class="subtitle">Full Steel. 16 MPH. Zero range anxiety (because they don't start yet).</p>
         </div>
@@ -337,17 +331,17 @@
             <div class="specs-container" style="margin-top: 30px;">
                 <div class="spec-card glass">
                     <h3>16 MPH*</h3>
-                    <p>Fast enough to feel alive, slow enough to keep your teeth.</p>
+                    <p>Fast enough to feel alive.</p>
                 </div>
                 <div class="spec-card glass">
                     <h3>Steel Frame</h3>
-                    <p>It weighs 70lbs. It's not heavy, it's <strong>dense with quality</strong>.</p>
+                    <p>It's not heavy, it's <strong>dense with quality</strong>.</p>
                 </div>
                 <div class="spec-card glass">
                     <h3>Foldable</h3>
-                    <p>Fits in a hatchback. Fits in a sedan. Fits in your heart.</p>
+                    <p>Fits in a hatchback. Fits in your heart.</p>
                 </div>
-                <div class="spec-card glass">
+                <div class="spec-card glass" id="egg-rare">
                     <h3>Rare AF</h3>
                     <p>Ride a piece of history. Be the main character.</p>
                 </div>
@@ -361,7 +355,7 @@
                 <p><strong>The bad news:</strong> Batteries are dead. As in, doornail dead.</p>
                 <p><strong>The good news:</strong> It takes standard 12V Lead Acid bricks. $50 bucks at Home Depot.</p>
                 <p><strong>The IQ 200 Move:</strong> You buy cheap. You swap battery. You win.</p>
-                <div style="font-size: 3rem; text-align: center; margin-top: 20px; cursor: pointer;" id="battery-egg">🪫</div>
+                <div style="font-size: 3rem; text-align: center; margin-top: 20px; cursor: pointer;" id="battery-egg" title="Click to charge">🪫</div>
             </div>
 
             <div class="glass">
@@ -371,13 +365,15 @@
                 </div>
 
                 <div id="laws" class="tab-content active">
-                    <h3>The "Is it Legal?" Disclaimer</h3>
-                    <div class="grok-voice">"It's not quite a bike. It's not quite a motorcycle. It's a loophole with wheels."</div>
-                    <ul style="line-height: 1.8; opacity: 0.9;">
-                        <li><strong>Classification Confusion:</strong> It has a seat, so cops get confused. It's the platypus of transport.</li>
-                        <li><strong>Sidewalks = Lava:</strong> Don't ride on sidewalks. You are too powerful.</li>
-                        <li><strong>License:</strong> Need a driver's license in CA. No insurance needed though.</li>
-                    </ul>
+                    <h3 id="egg-zombie-trigger" style="cursor:help;">The "Is it Legal?" Disclaimer</h3>
+                    <div id="legal-text">
+                        <div class="grok-voice">"It's not quite a bike. It's not quite a motorcycle. It's a loophole with wheels."</div>
+                        <ul style="line-height: 1.8; opacity: 0.9;">
+                            <li><strong>Classification Confusion:</strong> It has a seat, so cops get confused. It's the platypus of transport.</li>
+                            <li><strong>Sidewalks = Lava:</strong> Don't ride on sidewalks. You are too powerful.</li>
+                            <li><strong>License:</strong> Need a driver's license in CA. No insurance needed though.</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div id="hacks" class="tab-content">
@@ -398,8 +394,7 @@
         <div class="carousel-wrapper" style="width: 100%; border-radius: 0; background: transparent; box-shadow: none;">
             <div class="nav-btn nav-prev" onclick="moveLightbox(-1)">&#8249;</div>
             <div class="nav-btn nav-next" onclick="moveLightbox(1)">&#8250;</div>
-            <div class="carousel-track" id="lightbox-track">
-                </div>
+            <div class="carousel-track" id="lightbox-track"></div>
         </div>
     </div>
 
@@ -423,98 +418,51 @@
         document.addEventListener('touchstart', (e) => moveGlow(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
         document.addEventListener('touchend', () => glow.style.opacity = '0');
 
-        /* --- 2. CAROUSEL LOGIC (Simple Loop) --- */
+        /* --- 2. CAROUSEL & LIGHTBOX LOGIC --- */
         const setupDrag = (trackId) => {
             const slider = document.getElementById(trackId);
             let isDown = false;
             let startX;
             let scrollLeft;
-
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                slider.classList.add('active');
-                startX = e.pageX - slider.offsetLeft;
-                scrollLeft = slider.scrollLeft;
-            });
+            slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('active'); startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
             slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('active'); });
             slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active'); });
-            slider.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2; 
-                slider.scrollLeft = scrollLeft - walk;
-            });
+            slider.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
         };
         setupDrag('main-carousel');
 
-        // THE "GO AROUND" BUTTON LOGIC
-        function moveCarousel(direction) {
-            const slider = document.getElementById('main-carousel');
-            const itemWidth = slider.querySelector('.carousel-item').offsetWidth;
+        function handleLoop(slider, direction, itemWidth) {
             const maxScroll = slider.scrollWidth - slider.clientWidth;
-            
-            // Check if we are at the end
-            if (direction === 1 && slider.scrollLeft >= maxScroll - 10) {
-                // Loop back to start
-                slider.scrollTo({ left: 0, behavior: 'smooth' });
-            } 
-            // Check if we are at the start
-            else if (direction === -1 && slider.scrollLeft <= 10) {
-                // Loop to end
-                slider.scrollTo({ left: maxScroll, behavior: 'smooth' });
-            } 
-            else {
-                // Normal move
-                slider.scrollBy({ left: itemWidth * direction, behavior: 'smooth' });
-            }
+            if (direction === 1 && slider.scrollLeft >= maxScroll - 10) slider.scrollTo({ left: 0, behavior: 'smooth' });
+            else if (direction === -1 && slider.scrollLeft <= 10) slider.scrollTo({ left: maxScroll, behavior: 'smooth' });
+            else slider.scrollBy({ left: itemWidth * direction, behavior: 'smooth' });
         }
 
-        /* --- 3. LIGHTBOX LOGIC --- */
+        function moveCarousel(dir) {
+            const s = document.getElementById('main-carousel');
+            handleLoop(s, dir, s.querySelector('.carousel-item').offsetWidth);
+        }
+
         const lightbox = document.getElementById('lightbox');
         const lbTrack = document.getElementById('lightbox-track');
-        
         function openLightbox(index) {
-            lbTrack.innerHTML = document.getElementById('main-carousel').innerHTML; // Copy content
-            
-            // Disable clicks on lightbox images
+            lbTrack.innerHTML = document.getElementById('main-carousel').innerHTML;
             Array.from(lbTrack.children).forEach(child => child.onclick = null);
-
-            setupDrag('lightbox-track'); // Add drag physics
+            setupDrag('lightbox-track');
             lightbox.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
             setTimeout(() => {
                 lightbox.classList.add('visible');
-                // Scroll to the correct image
-                const width = window.innerWidth;
-                lbTrack.scrollLeft = width * index;
+                lbTrack.scrollLeft = window.innerWidth * index;
             }, 10);
         }
-
         function closeLightbox() {
             lightbox.classList.remove('visible');
-            setTimeout(() => {
-                lightbox.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 300);
+            setTimeout(() => { lightbox.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
         }
+        function moveLightbox(dir) { handleLoop(lbTrack, dir, window.innerWidth); }
 
-        function moveLightbox(direction) {
-            const width = window.innerWidth;
-            const maxScroll = lbTrack.scrollWidth - lbTrack.clientWidth;
-            
-            // Lightbox Looping Logic
-            if (direction === 1 && lbTrack.scrollLeft >= maxScroll - 10) {
-                lbTrack.scrollTo({ left: 0, behavior: 'smooth' });
-            } else if (direction === -1 && lbTrack.scrollLeft <= 10) {
-                lbTrack.scrollTo({ left: maxScroll, behavior: 'smooth' });
-            } else {
-                lbTrack.scrollBy({ left: width * direction, behavior: 'smooth' });
-            }
-        }
-
-        /* --- 4. MODAL & EASTER EGGS --- */
+        /* --- 3. MODAL LOGIC --- */
         const modalOverlay = document.getElementById('modal-overlay');
         function showModal(title, msg) {
             document.getElementById('modal-title').innerText = title;
@@ -525,18 +473,17 @@
         }
         function closeModal() {
             modalOverlay.classList.remove('active');
-            setTimeout(() => {
-                modalOverlay.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 300);
+            setTimeout(() => { modalOverlay.style.display = 'none'; document.body.style.overflow = 'auto'; }, 300);
         }
 
-        // Easter Eggs
+        /* --- 4. EASTER EGGS --- */
+        
+        // EGG 1: BATTERY CHARGE
         let charge = 0;
         document.getElementById('battery-egg').addEventListener('click', (e) => {
             charge++;
             e.target.style.transform = `scale(${1 + charge*0.1})`;
-            if(charge === 3) showModal("Charging...", "You are manually charging the battery with your mouse.");
+            if(charge === 3) showModal("Charging...", "You are manually charging the battery with your mouse. Keep going.");
             if(charge === 6) {
                 showModal("System Overload", "Okay, that's enough. You broke the simulation.");
                 e.target.innerText = "⚡️";
@@ -544,6 +491,62 @@
             }
         });
 
+        // EGG 2: LASHOUT LOGO GLITCH
+        const logo = document.getElementById('egg-logo');
+        logo.addEventListener('dblclick', () => {
+            logo.style.transform = "scale(1.5) rotate(-5deg)";
+            logo.textContent = "LASHING OUT!";
+            logo.style.color = "red";
+            setTimeout(() => {
+                logo.style.transform = "scale(1) rotate(0deg)";
+                logo.textContent = "LASHOUT";
+                logo.style.color = "inherit";
+            }, 1000);
+        });
+
+        // EGG 3: ZOMBIE PROTOCOL
+        const zombieTrigger = document.getElementById('egg-zombie-trigger');
+        const legalText = document.getElementById('legal-text');
+        let zombieMode = false;
+        zombieTrigger.addEventListener('dblclick', () => {
+            if(!zombieMode) {
+                zombieTrigger.innerText = "🧟 Zombie Survival Stats";
+                zombieTrigger.style.color = "green";
+                legalText.innerHTML = `<ul style="line-height: 1.8; color: #2ecc71;"><li><strong>Silent Running:</strong> Electric motor won't attract the horde.</li><li><strong>Range:</strong> 8 miles is enough to reach the safe zone.</li><li><strong>Durability:</strong> Steel frame can be used as a blunt weapon.</li></ul>`;
+                zombieMode = true;
+            }
+        });
+
+        // EGG 4: ENGINE RUMBLE
+        const hero = document.getElementById('egg-hero');
+        hero.addEventListener('mouseenter', () => document.body.classList.add('rumble'));
+        hero.addEventListener('mouseleave', () => document.body.classList.remove('rumble'));
+
+        // EGG 5: KONAMI CODE (MATRIX MODE)
+        let keySeq = [];
+        const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','b','a'];
+        document.addEventListener('keydown', (e) => {
+            keySeq.push(e.key);
+            keySeq = keySeq.slice(-6);
+            if (JSON.stringify(keySeq) === JSON.stringify(code)) {
+                document.body.style.fontFamily = "'Courier New', monospace";
+                document.body.style.background = "#000";
+                document.body.style.color = "#0f0";
+                document.querySelectorAll('.glass').forEach(p => {
+                    p.style.background = "rgba(0, 255, 0, 0.1)";
+                    p.style.borderColor = "#0f0";
+                });
+                showModal("Mainframe Hacked", "Welcome to the real world, Neo.");
+            }
+        });
+
+        // EGG 6: PARTY MODE
+        const rareCard = document.getElementById('egg-rare');
+        rareCard.addEventListener('click', () => {
+            document.body.classList.toggle('rainbow-bg');
+        });
+
+        /* --- 5. THEME TOGGLE --- */
         const themeBtn = document.getElementById('theme-btn');
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark-mode');
         themeBtn.addEventListener('click', () => {
