@@ -305,6 +305,51 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 768px) { h1 { font-size: 3rem; } .bottom-grid, .specs-container { grid-template-columns: 1fr; } .carousel-item { height: 300px; } }
+
+        /* --- IMPROVED SCHEMATICS --- */
+        .schematics-box {
+            margin: 20px 0;
+            padding: 25px; /* Increased padding for better breathing room */
+            background: rgba(0,0,0,0.03);
+            border-radius: 15px;
+        }
+
+        .schematic-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Default: 2 Columns */
+            gap: 20px; /* Increased gap for readability */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .schematic-item {
+            display: flex;
+            align-items: center;
+            padding: 10px; /* Larger touch targets */
+            background: rgba(255,255,255,0.4); /* Subtle background to separate items */
+            border-radius: 8px; /* Soft corners */
+            font-size: 1rem;
+        }
+
+        /* Dark mode support for the new items */
+        body.dark-mode .schematic-item {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .schematic-bullet {
+            color: var(--accent);
+            margin-right: 12px;
+            font-size: 1.2em;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        /* When screen is smaller than 768px (standard tablet/mobile breakpoint) */
+        @media (max-width: 768px) {
+            .schematic-list {
+                grid-template-columns: 1fr; /* Switch to 1 Column */
+            }
+        }
     </style>
 </head>
 <body>
@@ -360,15 +405,34 @@
                 "Look, modern scooters are made of plastic and hope. These things are built like they were expecting a zombie apocalypse in the early 2000s. You could probably drive this through a wall and the wall would apologize."
             </div>
             
-            <div style="margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 15px;">
+            <div class="schematics-box">
                 <h4 style="margin-top: 0; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Technical Schematics</h4>
-                <ul style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; list-style: none; padding: 0; margin: 0;">
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Motor:</strong>&nbsp; 24V High-Torque Brushed</li>
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Drive:</strong>&nbsp; Heavy Duty Chain Drive</li>
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Tires:</strong>&nbsp; 12.5" Pneumatic (Air Filled)</li>
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Brakes:</strong>&nbsp; Rear Drum/Band Brake</li>
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Throttle:</strong>&nbsp; Variable Speed Thumb Control</li>
-                    <li style="display: flex; align-items: center;"><span style="color: var(--accent); margin-right: 10px;">▸</span> <strong>Construction:</strong>&nbsp; Square Tube Steel</li>
+                
+                <ul class="schematic-list">
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Motor:</strong>&nbsp; 24V High-Torque Brushed</span>
+                    </li>
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Drive:</strong>&nbsp; Heavy Duty Chain Drive</span>
+                    </li>
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Tires:</strong>&nbsp; 12.5" Pneumatic (Air Filled)</span>
+                    </li>
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Brakes:</strong>&nbsp; Rear Drum/Band Brake</span>
+                    </li>
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Throttle:</strong>&nbsp; Variable Speed Thumb Control</span>
+                    </li>
+                    <li class="schematic-item">
+                        <span class="schematic-bullet">▸</span> 
+                        <span><strong>Construction:</strong>&nbsp; Square Tube Steel</span>
+                    </li>
                 </ul>
             </div>
 
@@ -571,8 +635,8 @@
         let charge = 0;
         document.getElementById('battery-egg').addEventListener('click', (e) => {
             charge++; e.target.style.transform = `scale(${1 + charge*0.1})`;
-            if(charge === 3) showModal("Charging...", "Keep going.");
-            if(charge === 6) { showModal("Overload", "You broke the simulation."); e.target.innerText = "⚡️"; charge=0; }
+            if(charge === 3) showModal("Charging...", "You are manually charging the battery with your mouse. Keep going.");
+            if(charge === 6) { showModal("System Overload", "Okay, that's enough. You broke the simulation."); e.target.innerText = "⚡️"; charge=0; }
         });
 
         document.getElementById('egg-logo').addEventListener('dblclick', (e) => {
