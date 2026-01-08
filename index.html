@@ -3,444 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lashout Electric - Vintage Tech, Modern Ride</title>
+    <title>LASHOUT: The Resurrection</title>
     <style>
         :root {
-            --primary-hue: 220;
-            --bg-gradient-light: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --glass-light: rgba(255, 255, 255, 0.25);
-            --glass-dark: rgba(15, 23, 42, 0.6);
-            --border-light: rgba(255, 255, 255, 0.4);
+            --bg-light: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            --bg-dark: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            --glass-light: rgba(255, 255, 255, 0.45);
+            --glass-dark: rgba(0, 0, 0, 0.6);
+            --border-light: rgba(255, 255, 255, 0.6);
             --border-dark: rgba(255, 255, 255, 0.1);
             --text-light: #1d1d1f;
-            --text-dark: #f5f5f7;
-            --accent: #007aff;
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --text-dark: #fbfbfb;
+            --accent: #0071e3; /* Apple Blue */
+            --danger: #ff3b30;
+            --success: #34c759;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
-        /* Default (Auto) - Will be overridden by JS if toggled */
+        * { box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            background: var(--bg-gradient-light);
+            background: var(--bg-light);
             color: var(--text-light);
             transition: background 0.5s ease, color 0.5s ease;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Background animated blobs */
-        .orb {
-            position: fixed;
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Ambient Background Blobs */
+        .blob {
+            position: absolute;
             border-radius: 50%;
             filter: blur(80px);
             z-index: -1;
-            opacity: 0.6;
-            animation: float 20s infinite;
+            opacity: 0.7;
+            animation: drift 20s infinite alternate;
         }
-        .orb-1 { width: 400px; height: 400px; background: #4facfe; top: -100px; left: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: #00f2fe; bottom: 50px; right: -50px; animation-delay: -5s; }
-        .orb-3 { width: 200px; height: 200px; background: #a18cd1; top: 40%; left: 40%; animation-delay: -10s; }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            33% { transform: translate(30px, -50px); }
-            66% { transform: translate(-20px, 20px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        /* Dark Mode Override */
-        body.dark-mode {
-            background: #000;
-            color: var(--text-dark);
-        }
-        body.dark-mode .orb { opacity: 0.3; }
+        .blob-1 { width: 500px; height: 500px; background: #a8c0ff; top: -100px; left: -200px; }
+        .blob-2 { width: 400px; height: 400px; background: #3f2b96; bottom: -100px; right: -100px; animation-delay: -5s; }
         
-        /* Glassmorphism Card Style */
-        .glass-panel {
+        body.dark-mode .blob-1 { background: #2a2a72; opacity: 0.4; }
+        body.dark-mode .blob-2 { background: #009ffd; opacity: 0.3; }
+
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(50px, -50px); }
+        }
+
+        /* Glass Container */
+        .glass {
             background: var(--glass-light);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-light);
             border-radius: 24px;
-            box-shadow: var(--shadow);
             padding: 2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
         }
-        
-        body.dark-mode .glass-panel {
+
+        body.dark-mode .glass {
             background: var(--glass-dark);
             border: 1px solid var(--border-dark);
         }
 
-        .glass-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
-        }
-
-        /* Layout */
         .container {
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
 
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            margin-bottom: 40px;
         }
 
-        .logo {
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: -0.5px;
-            cursor: pointer;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(4px);
-            transition: 0.3s;
-        }
-        .theme-toggle:hover { transform: scale(1.1); }
-
-        /* Hero Section */
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-            margin-bottom: 80px;
-        }
-
-        .hero-content h1 {
-            font-size: 4rem;
-            line-height: 1;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #007aff, #00d2ff);
+        .brand {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            cursor: crosshair; /* Subtle Easter Egg hint */
         }
 
-        .hero-content p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-bottom: 30px;
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
+        .toggle-btn {
+            background: rgba(0,0,0,0.05);
+            border: none;
+            padding: 10px 20px;
             border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: inherit;
+            backdrop-filter: blur(5px);
         }
 
-        /* The "Catch" Section (Battery) */
-        .opportunity-banner {
+        /* Hero Typography */
+        .hero-text {
             text-align: center;
-            margin-bottom: 60px;
+            margin: 40px 0;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            line-height: 0.95;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Gallery - Now at Top */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .gallery-item {
+            height: 300px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.02) translateY(-5px);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Specs / Expanded Info */
+        .specs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .spec-card {
+            padding: 20px;
+            text-align: center;
+        }
+        .spec-card h3 { color: var(--accent); margin-bottom: 5px; font-size: 2rem; }
+        .spec-card p { opacity: 0.7; font-size: 0.9rem; }
+
+        /* The "Catch" & Tabs Layout */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr; /* Battery smaller, Tabs larger */
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        /* Battery Section */
+        .battery-warning {
+            border: 2px solid rgba(255, 59, 48, 0.3);
+            background: rgba(255, 59, 48, 0.05);
             position: relative;
             overflow: hidden;
         }
 
-        .opportunity-content {
+        /* Tabs */
+        .tabs {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .battery-icon { font-size: 3rem; margin-bottom: 10px; cursor: pointer; user-select: none;}
-
-        .price-tag {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #34c759;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        /* Specs Grid */
-        .specs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-
-        .spec-item {
-            text-align: center;
-        }
-        .spec-item h3 { margin-bottom: 5px; color: var(--accent); }
-        .spec-item p { font-size: 0.9rem; opacity: 0.7; }
-
-        /* Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 80px;
-        }
-        .gallery img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: rgba(0,0,0,0.05);
             border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
             transition: 0.3s;
-        }
-        .gallery img:hover { transform: scale(1.02); }
-
-        /* Legal & FAQ */
-        .info-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-        
-        .faq-item {
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(128,128,128,0.2);
-            padding-bottom: 10px;
-        }
-        .faq-item h4 { margin-bottom: 5px; font-weight: 600; }
-        .faq-item p { margin: 0; opacity: 0.8; font-size: 0.95rem; }
-
-        .legal-box {
-            background: rgba(255, 59, 48, 0.1);
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            color: #ff3b30;
-        }
-        body.dark-mode .legal-box { color: #ff453a; }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px;
-            opacity: 0.6;
-            font-size: 0.9rem;
+            color: inherit;
         }
 
-        .cta-button {
-            display: inline-block;
+        .tab-btn.active {
             background: var(--accent);
             color: white;
-            padding: 15px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
-            transition: 0.3s;
-        }
-        .cta-button:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 122, 255, 0.5); }
-
-        /* Easter Egg Animations */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.4);
         }
 
-        .party-mode {
-            animation: rainbow 5s linear infinite;
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.3s ease;
         }
-        @keyframes rainbow { 
-            100% { filter: hue-rotate(360deg); } 
+        .tab-content.active { display: block; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mobile Responsive */
+        /* Typography & Tone */
+        .grok-voice {
+            font-style: italic;
+            opacity: 0.8;
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+
+        .hyperbole {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero, .info-section { grid-template-columns: 1fr; }
-            .hero-content h1 { font-size: 2.5rem; }
+            h1 { font-size: 3rem; }
+            .bottom-grid, .specs-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
     <div class="container">
-        <header class="glass-panel" style="padding: 10px 30px;">
-            <div class="logo" id="egg-logo">LASHOUT</div>
-            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">◐</button>
+        <header>
+            <div class="brand" id="logo-trigger" title="Double Click for a good time">LASHOUT</div>
+            <button class="toggle-btn" id="theme-btn">Auto Mode</button>
         </header>
 
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Built like a Tank.<br>Rides like a Dream.</h1>
-                <p>Full steel square frames. Aluminum foot panels. The Lashout isn't a toy—it's a 90s engineering marvel ready for its second life.</p>
-                <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">CONDITION: 8/10 (Always Garaged)</div>
-                <a href="#contact" class="cta-button">Make an Offer</a>
-            </div>
-            <div class="glass-panel" style="padding: 10px;">
-                <img src="https://placehold.co/600x400/222/fff?text=Lashout+Scooter+Side+Profile" alt="Lashout Scooter" class="hero-image">
-            </div>
-        </section>
+        <div class="hero-text">
+            <h1>The Tesla Cybertruck<br>of <span class="hyperbole">2002</span>.</h1>
+            <p class="subtitle">Full Steel. 16 MPH. Zero range anxiety (because they don't start yet).</p>
+        </div>
 
-        <section class="glass-panel opportunity-banner">
-            <div class="opportunity-content">
-                <div class="battery-icon" id="egg-battery">🔋</div>
-                <h2>The "5-Minute Fix" Discount</h2>
-                <p style="max-width: 600px; margin: 0 auto 20px auto;">
-                    These scooters are pristine but have been sleeping in the garage. They need new lead-acid batteries. 
-                    The bad news? They don't run right now. <br>
-                    <strong>The good news?</strong> Replacements are $50 at Home Depot and take 5 minutes to swap.
-                </p>
-                <p class="price-tag">My Laziness = Your Savings</p>
+        <div class="gallery-grid">
+            <div class="gallery-item glass" style="padding:0;">
+                <img src="https://placehold.co/600x600/222/fff?text=The+Beast+(Profile)" alt="Profile">
             </div>
-        </section>
+            <div class="gallery-item glass" style="padding:0;">
+                <img src="https://placehold.co/600x600/333/fff?text=Cockpit+(High+Tech)" alt="Cockpit">
+            </div>
+            <div class="gallery-item glass" style="padding:0;">
+                <img src="https://placehold.co/600x600/444/fff?text=Folded+(Origami+Mode)" alt="Folded">
+            </div>
+        </div>
 
-        <section class="specs-grid">
-            <div class="glass-panel spec-item">
-                <h3>16 MPH</h3>
-                <p>Top Speed (Terrain Dependent)</p>
+        <div class="glass">
+            <h2 style="margin-top: 0; font-size: 2rem;">Why you want this.</h2>
+            <div class="grok-voice">
+                "Look, modern scooters are made of plastic and hope. These things are built like they were expecting a zombie apocalypse in the early 2000s. You could probably drive this through a drywall and the wall would apologize."
             </div>
-            <div class="glass-panel spec-item">
-                <h3>8 Miles</h3>
-                <p>Range per Charge</p>
-            </div>
-            <div class="glass-panel spec-item">
-                <h3>Foldable</h3>
-                <p>Fits in any trunk or hatch</p>
-            </div>
-            <div class="glass-panel spec-item">
-                <h3>300-400</h3>
-                <p>Charge Cycles (Smart Charging)</p>
-            </div>
-        </section>
-
-        <h2 style="text-align: center; margin-bottom: 20px;">Current Condition</h2>
-        <section class="gallery">
-            <div class="glass-panel" style="padding: 5px;">
-                <img src="https://placehold.co/400x300/333/fff?text=Folded+View" alt="Folded">
-            </div>
-            <div class="glass-panel" style="padding: 5px;">
-                <img src="https://placehold.co/400x300/333/fff?text=Cockpit+View" alt="Handlebars">
-            </div>
-            <div class="glass-panel" style="padding: 5px;">
-                <img src="https://placehold.co/400x300/333/fff?text=Seat+Detail" alt="Seat">
-            </div>
-        </section>
-
-        <section class="info-section">
-            <div class="glass-panel">
-                <h3 style="margin-top:0;">Everything You Need to Know</h3>
-                
-                <div class="faq-item">
-                    <h4>How long do they last?</h4>
-                    <p>Unlike modern throw-away scooters, these are serviceable. With proper charging (don't drain to 0%), batteries last 300-400 cycles.</p>
+            
+            <div class="specs-container" style="margin-top: 30px;">
+                <div class="spec-card glass">
+                    <h3>16 MPH*</h3>
+                    <p>Fast enough to feel alive, slow enough to keep your teeth. <br><small>*Downhill with a tailwind? Maybe 20.</small></p>
                 </div>
-                
-                <div class="faq-item">
-                    <h4>Can I ride it off-road?</h4>
-                    <p>Light trails and paths? Yes. Extreme terrain? No. It handles bumps better than most thanks to the steel frame.</p>
+                <div class="spec-card glass">
+                    <h3>Steel Frame</h3>
+                    <p>It weighs 70lbs. It's not heavy, it's <strong>dense with quality</strong>. It doubles as a gym workout.</p>
                 </div>
-
-                <div class="faq-item">
-                    <h4>Weight limit?</h4>
-                    <p>Designed for adults. Speed/range varies by weight, but the motor has a heat sensor to shut down before overheating if pushed too hard.</p>
+                <div class="spec-card glass">
+                    <h3>Foldable</h3>
+                    <p>Fits in a hatchback. Fits in a sedan. Fits in your heart.</p>
+                </div>
+                <div class="spec-card glass">
+                    <h3>Rare AF</h3>
+                    <p>You can buy a generic bird scooter, or you can ride a piece of history.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="glass-panel legal-box" id="legal-panel">
-                <h3 style="color: inherit; margin-top:0;">California E-Bike Laws ⚖️</h3>
-                <p><strong>Know where to ride:</strong></p>
-                <ul style="padding-left: 20px; line-height: 1.6;">
-                    <li><strong>Bike Lanes:</strong> Generally allowed (Class 2 definition).</li>
-                    <li><strong>Sidewalks:</strong> Usually illegal in CA unless specified by local city ordinance.</li>
-                    <li><strong>Helmet:</strong> Required if you are under 18. Recommended for everyone.</li>
-                    <li><strong>License:</strong> No driver's license or insurance required in CA.</li>
-                </ul>
-                <small style="opacity: 0.7;">*Disclaimer: Laws change. Check your local city ordinances.</small>
+        <div class="bottom-grid">
+            
+            <div class="glass battery-warning">
+                <h3 style="color: var(--danger); margin-top: 0;">⚠️ The "Some Assembly Required" Part</h3>
+                <p><strong>The bad news:</strong> I have been too lazy to change the batteries. They are currently dead. As in, doornail dead.</p>
+                <p><strong>The good news:</strong> It takes standard 12V Lead Acid bricks. You can get them at Home Depot for like $50 bucks.</p>
+                <p><strong>The IQ 200 Move:</strong> You buy my pristine, garage-kept scooters for cheap, spend 5 minutes swapping the battery, and suddenly you have a $600 ride. Don't tell me I didn't warn you about the profit margins.</p>
+                <div style="font-size: 3rem; text-align: center; margin-top: 20px; cursor: pointer;" id="battery-egg">🪫</div>
             </div>
-        </section>
 
-        <footer id="contact">
-            <p>Interested? Send me a message.</p>
-            <p id="secret-footer" style="cursor: help;">&copy; 2026 Lashout Resale</p>
+            <div class="glass">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab('laws')">👮 The Law</button>
+                    <button class="tab-btn" onclick="openTab('hacks')">🚀 Speed Hacks</button>
+                </div>
+
+                <div id="laws" class="tab-content active">
+                    <h3>The "Is it Legal?" Disclaimer</h3>
+                    <div class="grok-voice">
+                        "It's not quite a bike. It's not quite a motorcycle. It's a loophole with wheels."
+                    </div>
+                    <ul style="line-height: 1.8; opacity: 0.9;">
+                        <li><strong>The Classification Confusion:</strong> In California, it's technically a "Motorized Scooter" (CVC §407.5). But since it has a seat, some cops scratch their heads. It's the platypus of personal transport.</li>
+                        <li><strong>Sidewalks = Lava:</strong> Legally, you cannot ride this on the sidewalk. Practically, if you ride 16mph past a pedestrian, you are the enemy. Stick to the bike lane.</li>
+                        <li><strong>License & Reg:</strong> You need a valid driver's license or permit to operate a motorized scooter in CA, but you <em>don't</em> need insurance or vehicle registration plates.</li>
+                        <li><strong>The "Don't Be A Jerk" Clause:</strong> 99% of scooter law enforcement is based on whether you are annoying people. Ride chill, wear a helmet, and you're usually invisible to the law.</li>
+                    </ul>
+                </div>
+
+                <div id="hacks" class="tab-content">
+                    <h3 style="color: var(--accent);">🔓 Unlocking Maximum Velocity</h3>
+                    <div class="grok-voice">
+                        "WARNING: The following methods are theoretical physics experiments and not legal advice."
+                    </div>
+                    <p><strong>Method 1: The Gravity Assist.</strong><br>
+                    Find a hill with a gradient of >15%. Disengage the throttle. Let Newton take the wheel. (Terminal velocity is technically higher than 16mph).</p>
+                    
+                    <p><strong>Method 2: The Aero Tuck.</strong><br>
+                    If you fold yourself into the shape of a origami crane while riding, drag coefficient drops by 0.04%. Expect speed gains of roughly 0.1 mph.</p>
+                    
+                    <p><strong>Method 3: The 24V Bypass (Real Talk).</strong><br>
+                    The controller is sealed. The motor has a heat sensor. It's designed to <em>not</em> explode. Just enjoy the cruise, speed racer.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <footer style="text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem;">
+            &copy; 2026 Lashout Resale. No refunds if you fall off.
         </footer>
+
     </div>
 
     <script>
+        // --- Tabs Logic ---
+        function openTab(tabName) {
+            // Hide all contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Deactivate all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            
+            // Activate selected
+            document.getElementById(tabName).classList.add('active');
+            
+            // Find the button that triggered this (rough approximation for simplicity)
+            const clickedBtn = Array.from(buttons).find(b => b.textContent.toLowerCase().includes(tabName === 'laws' ? 'law' : 'speed'));
+            if(clickedBtn) clickedBtn.classList.add('active');
+        }
+
         // --- Theme Logic ---
-        const toggleBtn = document.getElementById('theme-toggle');
+        const themeBtn = document.getElementById('theme-btn');
         const body = document.body;
         
-        // Check system preference
+        // Auto detect
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             body.classList.add('dark-mode');
         }
 
-        toggleBtn.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-        });
-
-        // --- Easter Eggs ---
-
-        // Egg 1: The "Overcharge" Battery
-        // Click the battery icon 5 times to trigger a "party mode" hue rotation
-        let batteryClicks = 0;
-        const batteryBtn = document.getElementById('egg-battery');
-        
-        batteryBtn.addEventListener('click', () => {
-            batteryClicks++;
-            // Visual feedback
-            batteryBtn.style.transform = `scale(${1 + (batteryClicks * 0.1)})`;
-            
-            if (batteryClicks >= 5) {
-                document.body.classList.add('party-mode');
-                batteryBtn.innerHTML = "⚡️";
-                alert("SYSTEM OVERCHARGE INITIATED! (Party Mode On)");
-                batteryClicks = 0;
+        themeBtn.addEventListener('click', () => {
+            if(body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                themeBtn.textContent = "Light Mode";
+            } else {
+                body.classList.add('dark-mode');
+                themeBtn.textContent = "Dark Mode";
             }
         });
 
-        // Egg 2: The "Rumble" Logo
-        // Hovering over the logo rapidly shakes the screen slightly (simulating a motor)
-        const logo = document.getElementById('egg-logo');
-        logo.addEventListener('mouseover', () => {
-            document.body.style.animation = "shake 0.5s";
-            document.body.style.animationIterationCount = "infinite";
-        });
-        logo.addEventListener('mouseout', () => {
-            document.body.style.animation = "none";
+        // --- Easter Egg 1: The Battery Recharge ---
+        // Click the battery icon to "recharge" it visually
+        const batIcon = document.getElementById('battery-egg');
+        let chargeLevel = 0;
+        
+        batIcon.addEventListener('click', () => {
+            chargeLevel++;
+            if(chargeLevel === 1) batIcon.textContent = "🟥";
+            if(chargeLevel === 2) batIcon.textContent = "🟧";
+            if(chargeLevel === 3) batIcon.textContent = "🟨";
+            if(chargeLevel === 4) batIcon.textContent = "🟩";
+            if(chargeLevel === 5) {
+                batIcon.textContent = "⚡️ FULL POWER";
+                batIcon.style.color = "#ffe600";
+                batIcon.style.textShadow = "0 0 20px #ffe600";
+                alert("Batteries virtualized. Scooter is now mentally ready to ride.");
+            }
         });
 
-        // Egg 3: The Secret Legal Disclaimer
-        // Clicking the legal text changes it to "Zombie Apocalypse Mode" text
-        const legalPanel = document.getElementById('legal-panel');
-        let legalToggle = false;
+        // --- Easter Egg 2: Logo "Lashout" Effect ---
+        // Double clicking the logo causes a CSS "glitch" or lash out effect
+        const logo = document.getElementById('logo-trigger');
+        logo.addEventListener('dblclick', () => {
+            logo.style.transform = "scale(1.5) rotate(-5deg)";
+            logo.textContent = "LASHING OUT!";
+            logo.style.color = "red";
+            setTimeout(() => {
+                logo.style.transform = "scale(1) rotate(0deg)";
+                logo.textContent = "LASHOUT";
+                logo.style.color = "inherit";
+            }, 1000);
+        });
+
+        // --- Easter Egg 3: Konami Code for "Matrix Mode" ---
+        let keySequence = [];
+        const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'b', 'a'];
         
-        legalPanel.addEventListener('dblclick', () => {
-            if(!legalToggle) {
-                legalPanel.innerHTML = `
-                    <h3 style="color: inherit; margin-top:0;">Zombie Evasion Protocols 🧟</h3>
-                    <p><strong>Survival Rating: High</strong></p>
-                    <ul style="padding-left: 20px; line-height: 1.6;">
-                        <li><strong>Silent Running:</strong> Electric motor won't attract the horde.</li>
-                        <li><strong>Range:</strong> 8 miles is enough to get to the safe zone.</li>
-                        <li><strong>Durability:</strong> Steel frame can be used as a blunt weapon if necessary.</li>
-                    </ul>`;
-                legalToggle = true;
+        document.addEventListener('keydown', (e) => {
+            keySequence.push(e.key);
+            keySequence = keySequence.slice(-6);
+            if (JSON.stringify(keySequence) === JSON.stringify(secretCode)) {
+                document.body.style.fontFamily = "'Courier New', monospace";
+                document.body.style.background = "#000";
+                document.body.style.color = "#0f0";
+                const glassPanels = document.querySelectorAll('.glass');
+                glassPanels.forEach(p => {
+                    p.style.background = "rgba(0, 255, 0, 0.1)";
+                    p.style.borderColor = "#0f0";
+                });
+                alert("We are in the mainframe.");
             }
         });
 
