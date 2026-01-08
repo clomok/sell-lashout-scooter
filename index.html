@@ -1,12 +1,449 @@
-<html>
-    <head>
-        <title>
-            Buy Lashout Scooter
-        </title>
-    </head>
-    <body>
-        <h1>
-            Buy My Lashout Scooters
-        </h1>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lashout Electric - Vintage Tech, Modern Ride</title>
+    <style>
+        :root {
+            --primary-hue: 220;
+            --bg-gradient-light: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-light: rgba(255, 255, 255, 0.25);
+            --glass-dark: rgba(15, 23, 42, 0.6);
+            --border-light: rgba(255, 255, 255, 0.4);
+            --border-dark: rgba(255, 255, 255, 0.1);
+            --text-light: #1d1d1f;
+            --text-dark: #f5f5f7;
+            --accent: #007aff;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* Default (Auto) - Will be overridden by JS if toggled */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: var(--bg-gradient-light);
+            color: var(--text-light);
+            transition: background 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        /* Background animated blobs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 20s infinite;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #4facfe; top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #00f2fe; bottom: 50px; right: -50px; animation-delay: -5s; }
+        .orb-3 { width: 200px; height: 200px; background: #a18cd1; top: 40%; left: 40%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -50px); }
+            66% { transform: translate(-20px, 20px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Dark Mode Override */
+        body.dark-mode {
+            background: #000;
+            color: var(--text-dark);
+        }
+        body.dark-mode .orb { opacity: 0.3; }
+        
+        /* Glassmorphism Card Style */
+        .glass-panel {
+            background: var(--glass-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        body.dark-mode .glass-panel {
+            background: var(--glass-dark);
+            border: 1px solid var(--border-dark);
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+            transition: 0.3s;
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #007aff, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        /* The "Catch" Section (Battery) */
+        .opportunity-banner {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .opportunity-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .battery-icon { font-size: 3rem; margin-bottom: 10px; cursor: pointer; user-select: none;}
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #34c759;
+        }
+
+        /* Specs Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .spec-item {
+            text-align: center;
+        }
+        .spec-item h3 { margin-bottom: 5px; color: var(--accent); }
+        .spec-item p { font-size: 0.9rem; opacity: 0.7; }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .gallery img:hover { transform: scale(1.02); }
+
+        /* Legal & FAQ */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(128,128,128,0.2);
+            padding-bottom: 10px;
+        }
+        .faq-item h4 { margin-bottom: 5px; font-weight: 600; }
+        .faq-item p { margin: 0; opacity: 0.8; font-size: 0.95rem; }
+
+        .legal-box {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            color: #ff3b30;
+        }
+        body.dark-mode .legal-box { color: #ff453a; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+            transition: 0.3s;
+        }
+        .cta-button:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 122, 255, 0.5); }
+
+        /* Easter Egg Animations */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .party-mode {
+            animation: rainbow 5s linear infinite;
+        }
+        @keyframes rainbow { 
+            100% { filter: hue-rotate(360deg); } 
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero, .info-section { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <header class="glass-panel" style="padding: 10px 30px;">
+            <div class="logo" id="egg-logo">LASHOUT</div>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">◐</button>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Built like a Tank.<br>Rides like a Dream.</h1>
+                <p>Full steel square frames. Aluminum foot panels. The Lashout isn't a toy—it's a 90s engineering marvel ready for its second life.</p>
+                <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">CONDITION: 8/10 (Always Garaged)</div>
+                <a href="#contact" class="cta-button">Make an Offer</a>
+            </div>
+            <div class="glass-panel" style="padding: 10px;">
+                <img src="https://placehold.co/600x400/222/fff?text=Lashout+Scooter+Side+Profile" alt="Lashout Scooter" class="hero-image">
+            </div>
+        </section>
+
+        <section class="glass-panel opportunity-banner">
+            <div class="opportunity-content">
+                <div class="battery-icon" id="egg-battery">🔋</div>
+                <h2>The "5-Minute Fix" Discount</h2>
+                <p style="max-width: 600px; margin: 0 auto 20px auto;">
+                    These scooters are pristine but have been sleeping in the garage. They need new lead-acid batteries. 
+                    The bad news? They don't run right now. <br>
+                    <strong>The good news?</strong> Replacements are $50 at Home Depot and take 5 minutes to swap.
+                </p>
+                <p class="price-tag">My Laziness = Your Savings</p>
+            </div>
+        </section>
+
+        <section class="specs-grid">
+            <div class="glass-panel spec-item">
+                <h3>16 MPH</h3>
+                <p>Top Speed (Terrain Dependent)</p>
+            </div>
+            <div class="glass-panel spec-item">
+                <h3>8 Miles</h3>
+                <p>Range per Charge</p>
+            </div>
+            <div class="glass-panel spec-item">
+                <h3>Foldable</h3>
+                <p>Fits in any trunk or hatch</p>
+            </div>
+            <div class="glass-panel spec-item">
+                <h3>300-400</h3>
+                <p>Charge Cycles (Smart Charging)</p>
+            </div>
+        </section>
+
+        <h2 style="text-align: center; margin-bottom: 20px;">Current Condition</h2>
+        <section class="gallery">
+            <div class="glass-panel" style="padding: 5px;">
+                <img src="https://placehold.co/400x300/333/fff?text=Folded+View" alt="Folded">
+            </div>
+            <div class="glass-panel" style="padding: 5px;">
+                <img src="https://placehold.co/400x300/333/fff?text=Cockpit+View" alt="Handlebars">
+            </div>
+            <div class="glass-panel" style="padding: 5px;">
+                <img src="https://placehold.co/400x300/333/fff?text=Seat+Detail" alt="Seat">
+            </div>
+        </section>
+
+        <section class="info-section">
+            <div class="glass-panel">
+                <h3 style="margin-top:0;">Everything You Need to Know</h3>
+                
+                <div class="faq-item">
+                    <h4>How long do they last?</h4>
+                    <p>Unlike modern throw-away scooters, these are serviceable. With proper charging (don't drain to 0%), batteries last 300-400 cycles.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>Can I ride it off-road?</h4>
+                    <p>Light trails and paths? Yes. Extreme terrain? No. It handles bumps better than most thanks to the steel frame.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Weight limit?</h4>
+                    <p>Designed for adults. Speed/range varies by weight, but the motor has a heat sensor to shut down before overheating if pushed too hard.</p>
+                </div>
+            </div>
+
+            <div class="glass-panel legal-box" id="legal-panel">
+                <h3 style="color: inherit; margin-top:0;">California E-Bike Laws ⚖️</h3>
+                <p><strong>Know where to ride:</strong></p>
+                <ul style="padding-left: 20px; line-height: 1.6;">
+                    <li><strong>Bike Lanes:</strong> Generally allowed (Class 2 definition).</li>
+                    <li><strong>Sidewalks:</strong> Usually illegal in CA unless specified by local city ordinance.</li>
+                    <li><strong>Helmet:</strong> Required if you are under 18. Recommended for everyone.</li>
+                    <li><strong>License:</strong> No driver's license or insurance required in CA.</li>
+                </ul>
+                <small style="opacity: 0.7;">*Disclaimer: Laws change. Check your local city ordinances.</small>
+            </div>
+        </section>
+
+        <footer id="contact">
+            <p>Interested? Send me a message.</p>
+            <p id="secret-footer" style="cursor: help;">&copy; 2026 Lashout Resale</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Theme Logic ---
+        const toggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-mode');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+        });
+
+        // --- Easter Eggs ---
+
+        // Egg 1: The "Overcharge" Battery
+        // Click the battery icon 5 times to trigger a "party mode" hue rotation
+        let batteryClicks = 0;
+        const batteryBtn = document.getElementById('egg-battery');
+        
+        batteryBtn.addEventListener('click', () => {
+            batteryClicks++;
+            // Visual feedback
+            batteryBtn.style.transform = `scale(${1 + (batteryClicks * 0.1)})`;
+            
+            if (batteryClicks >= 5) {
+                document.body.classList.add('party-mode');
+                batteryBtn.innerHTML = "⚡️";
+                alert("SYSTEM OVERCHARGE INITIATED! (Party Mode On)");
+                batteryClicks = 0;
+            }
+        });
+
+        // Egg 2: The "Rumble" Logo
+        // Hovering over the logo rapidly shakes the screen slightly (simulating a motor)
+        const logo = document.getElementById('egg-logo');
+        logo.addEventListener('mouseover', () => {
+            document.body.style.animation = "shake 0.5s";
+            document.body.style.animationIterationCount = "infinite";
+        });
+        logo.addEventListener('mouseout', () => {
+            document.body.style.animation = "none";
+        });
+
+        // Egg 3: The Secret Legal Disclaimer
+        // Clicking the legal text changes it to "Zombie Apocalypse Mode" text
+        const legalPanel = document.getElementById('legal-panel');
+        let legalToggle = false;
+        
+        legalPanel.addEventListener('dblclick', () => {
+            if(!legalToggle) {
+                legalPanel.innerHTML = `
+                    <h3 style="color: inherit; margin-top:0;">Zombie Evasion Protocols 🧟</h3>
+                    <p><strong>Survival Rating: High</strong></p>
+                    <ul style="padding-left: 20px; line-height: 1.6;">
+                        <li><strong>Silent Running:</strong> Electric motor won't attract the horde.</li>
+                        <li><strong>Range:</strong> 8 miles is enough to get to the safe zone.</li>
+                        <li><strong>Durability:</strong> Steel frame can be used as a blunt weapon if necessary.</li>
+                    </ul>`;
+                legalToggle = true;
+            }
+        });
+
+    </script>
+</body>
 </html>
